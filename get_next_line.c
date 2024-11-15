@@ -6,7 +6,7 @@
 /*   By: tomlimon <tom.limon@>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 12:36:11 by tomlimon          #+#    #+#             */
-/*   Updated: 2024/11/14 15:52:01 by tomlimon         ###   ########.fr       */
+/*   Updated: 2024/11/15 13:49:36 by tomlimon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ char	*update_static_buffer(char *buffer, int start)
 	while (buffer[start + len])
 		len++;
 	new_buffer = ft_substr(buffer, start, len);
+	if (!new_buffer)
+		return (free(buffer), NULL);
 	free(buffer);
 	return (new_buffer);
 }
@@ -43,22 +45,24 @@ char	*update_static_buffer(char *buffer, int start)
 char	*get_next_line(int fd)
 {
 	static char	*buffer;
-	char		tmp[BUFFER_SIZE + 1];
+	char		*tmp;
 	char		*line;
 	int			byte_read;
 
+	tmp = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		buffer = ft_strdup("");
 	while (!ft_strchr(buffer, '\n'))
 	{
 		byte_read = read(fd, tmp, BUFFER_SIZE);
 		if (byte_read == -1)
-			return (free(buffer), buffer = NULL, NULL);
+			return (free(tmp), free(buffer), buffer = NULL, NULL);
 		tmp[byte_read] = '\0';
 		buffer = ft_strjoin_custom(buffer, tmp);
 		if (byte_read == 0)
 			break ;
 	}
+	free(tmp);
 	if (!*buffer)
 		return (free(buffer), buffer = NULL, NULL);
 	line = ft_line(buffer);
@@ -87,3 +91,25 @@ void	copy_strings(char *dest, const char *src, int start)
 		i++;
 	}
 }
+/*
+#include <fcntl.h>    // pour open
+#include <stdio.h>    // pour printf
+
+int main(void)
+{
+    const char *fileName = "./test.txt";
+    int fd = open(fileName, O_RDONLY);
+    int i = 0;
+
+    char *line;
+    while ((line = get_next_line(fd)) != NULL && i < 50000)
+    {
+        printf("%s\n",line);
+        free(line);
+        i++;
+    }
+
+    close(fd);
+    return 0;
+}
+*/

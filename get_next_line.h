@@ -6,7 +6,7 @@
 /*   By: tomlimon <tom.limon@>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 12:36:27 by tomlimon          #+#    #+#             */
-/*   Updated: 2024/11/14 14:55:46 by tomlimon         ###   ########.fr       */
+/*   Updated: 2024/11/15 13:37:04 by tomlimon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 100000000
 # endif
 
 char	*get_next_line(int fd);
